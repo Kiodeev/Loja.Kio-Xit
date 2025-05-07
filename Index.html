@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KIO.Xit-Oficial - Loja de Hacks e ModMenus</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    header {
+      background: #00ff88;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px #00ff88aa;
+    }
+    header h1 {
+      font-size: 2em;
+      color: #0a0a0a;
+    }
+    .container {
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .card {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #00ff88aa;
+      margin-top: 30px;
+      animation: fadeIn 0.8s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    input {
+      background: #1c1c1c;
+      color: #00ff88;
+    }
+    .password-toggle {
+      position: relative;
+    }
+    .password-toggle input {
+      padding-right: 40px;
+    }
+    .password-toggle span {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    button {
+      background: #00ff88;
+      color: #000;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00cc6a;
+    }
+    .hidden { display: none; }
+    .store {
+      margin-top: 40px;
+    }
+    .product {
+      background: #111;
+      border: 2px solid #00ff88;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .profile {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .profile button {
+      background: transparent;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+      width: auto;
+      padding: 6px 12px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>KIO.Xit-Oficial</h1>
+  </header>  <div class="container">
+    <div id="auth" class="card">
+      <h2 id="form-title">Cadastro</h2>
+      <input type="text" id="username" placeholder="Seu nome">
+      <input type="email" id="email" placeholder="Seu email">
+      <div class="password-toggle">
+        <input type="password" id="password" placeholder="Senha">
+        <span onclick="togglePassword()">👁️</span>
+      </div>
+      <button onclick="register()">Cadastrar</button>
+      <p style="margin-top:10px; text-align:center;">Já tem conta? <a href="#" onclick="switchToLogin()" style="color:#00ff88">Entrar</a></p>
+    </div><div id="store" class="card hidden">
+  <div class="profile">
+    <span id="user-name"></span>
+    <button onclick="logout()">Sair</button>
+  </div>
+  <h2>Loja</h2>
+  <div class="product">
+    <h3>VortexGraal v1.0</h3>
+    <p>ModMenu completo - R$25</p>
+    <button onclick="buyProduct()">Comprar</button>
+  </div>
+</div>
+
+<div id="payment" class="card hidden">
+  <h2>Pagamento via Pix</h2>
+  <p>Chave Pix (copie e cole):</p>
+  <input type="text" readonly value="2c5a1867-47ac-4945-82d4-d9635d21ea47">
+  <p style="margin-top:10px;">Após pagamento, clique abaixo para baixar:</p>
+  <a href="com.quatroplay.GraalClassic_2.2.apk" download><button>Baixar Agora</button></a>
+</div>
+
+  </div>  <script>
+    const auth = document.getElementById("auth");
+    const store = document.getElementById("store");
+    const payment = document.getElementById("payment");
+    const usernameInput = document.getElementById("username");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    function togglePassword() {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+    }
+
+    function register() {
+      const user = usernameInput.value.trim();
+      const email = emailInput.value.trim();
+      const pass = passwordInput.value.trim();
+      if (user && email && pass) {
+        localStorage.setItem("user", user);
+        localStorage.setItem("email", email);
+        localStorage.setItem("pass", pass);
+        login(user, pass);
+      } else {
+        alert("Preencha todos os campos.");
+      }
+    }
+
+    function login(name, pass) {
+      document.getElementById("form-title").innerText = "Login";
+      if (name === localStorage.getItem("user") && pass === localStorage.getItem("pass")) {
+        auth.classList.add("hidden");
+        store.classList.remove("hidden");
+        document.getElementById("user-name").innerText = `Olá, ${name}`;
+      } else {
+        alert("Email ou senha incorretos.");
+      }
+    }
+
+    function switchToLogin() {
+      const name = localStorage.getItem("user") || "";
+      usernameInput.value = name;
+      emailInput.classList.add("hidden");
+      document.querySelector("button").innerText = "Entrar";
+      document.querySelector("button").setAttribute("onclick", `login('${name}', passwordInput.value)`);
+      document.getElementById("form-title").innerText = "Login";
+    }
+
+    function buyProduct() {
+      store.classList.add("hidden");
+      payment.classList.remove("hidden");
+    }
+
+    function logout() {
+      store.classList.add("hidden");
+      payment.classList.add("hidden");
+      auth.classList.remove("hidden");
+    }
+  </script></body>
+</html>
